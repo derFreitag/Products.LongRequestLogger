@@ -4,9 +4,14 @@
 #
 ##############################################################################
 
-from cStringIO import StringIO
+from __future__ import absolute_import
+from __future__ import print_function
+try:
+    from io import StringIO
+except ImportError:
+    from cStringIO import StringIO
 from pprint import pformat
-from thread import get_ident
+from six.moves._thread import get_ident
 import Signals.Signals
 import ZConfig.components.logger.loghandler
 import ZServer.BaseLogger
@@ -92,9 +97,9 @@ def do_enable():
 
 def get_configuration():
     return dict(
-        timeout=float(os.environ.get('longrequestlogger_timeout', 
+        timeout=float(os.environ.get('longrequestlogger_timeout',
                                        DEFAULT_TIMEOUT)),
-        interval=float(os.environ.get('longrequestlogger_interval', 
+        interval=float(os.environ.get('longrequestlogger_interval',
                                        DEFAULT_INTERVAL)),
     )
 
@@ -142,7 +147,7 @@ class Dumper(object):
         # And we import it locally to get even monkey-patched versions of the
         # function.
         from ZPublisher.Publish import call_object
-        func_code = call_object.func_code #@UndefinedVariable
+        func_code = call_object.__code__ #@UndefinedVariable
         while frame is not None:
             code = frame.f_code
             if (code is func_code):
@@ -168,8 +173,8 @@ class Dumper(object):
         frame = sys._current_frames()[self.thread_id]
         output = StringIO()
         thread_info = self.get_thread_info(frame)
-        print >> output, thread_info
-        print >> output, "Traceback:"
+        print(thread_info, file=output)
+        print("Traceback:", file=output)
         traceback.print_stack(frame, file=output)
         del frame
         return output.getvalue()

@@ -4,6 +4,7 @@
 #
 ##############################################################################
 
+from __future__ import absolute_import
 import sys
 from logging import getLogger
 from Products.LongRequestLogger.monitor import Monitor

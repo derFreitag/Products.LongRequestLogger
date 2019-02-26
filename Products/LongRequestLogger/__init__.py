@@ -5,6 +5,7 @@
 ##############################################################################
 
 
+from __future__ import absolute_import
 def initialize(context):
     from Products.LongRequestLogger.dumper import do_enable
     from Products.LongRequestLogger.patch import do_patch

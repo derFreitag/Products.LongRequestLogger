@@ -4,10 +4,12 @@
 #
 ##############################################################################
 
+from __future__ import absolute_import
 import os
 from select import select
 from threading import Thread
 from Products.LongRequestLogger.dumper import Dumper
+from six.moves import map
 
 class Monitor(Thread):
     """Logs the stack-trace of a thread until it's stopped
@@ -50,7 +52,7 @@ class Monitor(Thread):
             r, w = self._event_pipe
             os.write(w, '\0')
             self.join()
-            map(os.close, self._event_pipe)
+            list(map(os.close, self._event_pipe))
 
     def run(self):
         timeout = self.dumper.timeout
